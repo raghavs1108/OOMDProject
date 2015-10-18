@@ -33,9 +33,10 @@ class Manager:
 		self.qc.close()
 		self.db.close()
 
-	def takeOrder(self):
+	def takeOrder(self, client_id):
 		# print ("Since I'm just a computer program, make it simple. privide only the item ids to me..")
 		# print ("Format: \nid1 count1 \nid2 count2 \nid3 count3 \nif you're done, press enter twice")
+		print ("Client number:" + str(client_id))
 		print ("tell me what you want:")
 		self.items = []
 		while True:
@@ -61,16 +62,17 @@ class Manager:
 					else :
 						self.notAvailable.append(item)
 						print "apologies.. the product available has expired.\n We will get back to you."
+						self.qc.renewStock(item[0], item[1], client_id)
 				else:
 					# available, but not the requested quantity
 					self.notAvailable.append(item)
 					print "item ID "+str(item[0]) + " not available. Please wait. We will get back to you."
-					self.qc.renewStock(item[0], item[1])
+					self.qc.renewStock(item[0], item[1], client_id)
 			else:
 				# item isn't in the inventory
 				self.notAvailable.append(item)
 				print "item ID "+str(item[0]) + " not available. Please wait. We will get back to you."
-				self.qc.renewStock(item[0], item[1])
+				self.qc.renewStock(item[0], item[1], client_id)
 				
 		if len(self.notAvailable) == 0:
 			# everything available

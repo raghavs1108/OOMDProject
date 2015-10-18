@@ -22,11 +22,21 @@ class QualityController:
 				else:
 					print "expiry found. Item removed from inventory."
 
-	def renewStock(self, item_id, quantity):
+	def renewStockThread(self, item_id, quantity, client_id):
 		itemDetails = self.db.getItemDetails(item_id)
 		self.supplier.request((itemDetails[0], itemDetails[1]), quantity)
 		# assume that the request is fulfilled..
 		self.addItemToInventory(item_id, quantity)
+		if client_id == -1:
+			print "\nnew stock has arrived\n"
+		else:
+			print "\n\norder of client number : " + str(client_id) + " has arrived.\n\n"
+
+	def renewStock(self, item_id, quantity, client_id):
+		t = threading.Thread(target=self.renewStockThread, args=(item_id, quantity, client_id))
+		t.start()
+		if client_id != -1:
+			print "we have successfully placed the order for client number " + str(client_id)
 
 	def close(self):
 		self.db.close()
@@ -57,6 +67,6 @@ class QualityController:
 			print "end date reached."
 			print "bad quality."
 			self.deleteItemFromInventory(item_id)
-			t = threading.Thread(target=self.renewStock, args=(item_id, self.renewQuantity))
-			t.start()
+			self.renewStock(item_id, self.renewQuantity, -1)
+		
 		return "not good"

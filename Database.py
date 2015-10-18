@@ -8,9 +8,9 @@ cur = conn.cursor()
 
 class Database :
 	def createAllTables(self):
-		query = "CREATE TABLE IF NOT EXISTS category(category_id int primary key, category_name text);"
+		query = "CREATE TABLE IF NOT EXISTS category(category_id int PRIMARY KEY, category_name text);"
 		cur.execute(query)
-		query = "CREATE TABLE IF NOT EXISTS item(item_id int  primary key, item_name text, category_id int, ttl int, price int, CONSTRAINT FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE CASCADE);"
+		query = "CREATE TABLE IF NOT EXISTS item(item_id int  PRIMARY KEY, item_name text, category_id int, ttl int, price int, CONSTRAINT FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE CASCADE);"
 		cur.execute(query)
 		query = "CREATE TABLE IF NOT EXISTS inventory(item_id int, item_count int, date_of_purchase DATE, CONSTRAINT PRIMARY KEY(item_id, date_of_purchase));"
 		cur.execute(query)
@@ -19,14 +19,14 @@ class Database :
 		return 
 
 	def dropAllTables(self):
-		query = "DROP TABLE inventory;"
-		cur.execute(query)
-		query = "DROP TABLE pending_orders;"
-		cur.execute(query)
-		query = "DROP TABLE item;"
-		cur.execute(query)
-		query = "DROP TABLE category;"
-		cur.execute(query)
+		# query = "DROP TABLE inventory;"
+		# cur.execute(query)
+		# query = "DROP TABLE pending_orders;"
+		# cur.execute(query)
+		# query = "DROP TABLE item;"
+		# cur.execute(query)
+		# query = "DROP TABLE category;"
+		# cur.execute(query)
 		return
 
 	def deleteAllData(self):
@@ -89,13 +89,13 @@ class Database :
 		cur.execute(query)
 
 	def getItemInfoFromInventory(self, item_id):
-		query = "SELECT * FROM inventory where item_id="+str(item_id)
+		query = "SELECT * FROM inventory WHERE item_id="+str(item_id)
 		cur.execute(query)
 		res = cur.fetchone()
 		return res 
 
 	def getItemDetails(self, item_id):
-		query = "SELECT * FROM item where item_id="+str(item_id)
+		query = "SELECT * FROM item WHERE item_id="+str(item_id)
 		cur.execute(query)
 		return cur.fetchone()
 
@@ -106,11 +106,11 @@ class Database :
 		self.insertAllData()
 		return
 	def displayInventory(self):
-		query = "SELECT * from inventory"
+		query = "SELECT * FROM inventory"
 		cur.execute(query)
 		return cur.fetchall()
 	def deleteItemFromInventory(self, item_id):
-		query = "SELECT * from inventory where item_id="+item_id
+		query = "SELECT * FROM inventory WHERE item_id="+item_id
 		cur.execute(query)
 		conn.commit()
 
